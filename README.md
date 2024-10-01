@@ -1,3 +1,4 @@
+## Thao tác cơ bản với Oracle:
 ### 1. Bảng
 ```
 CREATE TABLE cua_hang(
@@ -122,4 +123,25 @@ GRANT
 ON cua_hang TO tin_user;
 ```
 
-
+## PL/SQL:
+### 1. Khối vô danh:
+```
+SET SERVEROUTPUT ON;
+DECLARE
+    v_ten_ch NVARCHAR2(20);
+    v_dia_chi NVARCHAR2(30);
+BEGIN
+    DECLARE
+        v_ma_ch VARCHAR2(10);
+    BEGIN
+        v_ma_ch := '2';
+        
+        SELECT ten_ch, dia_chi
+        INTO v_ten_ch, v_dia_chi
+        FROM cua_hang
+        WHERE ma_ch = v_ma_ch;
+        
+        DBMS_OUTPUT.put_line(v_ten_ch || ' ' || v_dia_chi);
+    END;
+END;
+```
