@@ -145,3 +145,51 @@ BEGIN
     END;
 END;
 ```
+
+### 2. Các loại mệnh đề:
+Mệnh đề gán
+```
+DECLARE
+    v_ma_ch VARCHAR2(10);
+BEGIN
+    v_ma_ch := '1';
+END;
+```
+
+Mệnh đề lệnh
+```
+DECLARE
+    v_ma_ch VARCHAR2(10);
+    v_ten_ch NVARCHAR2(20);
+BEGIN
+    v_ma_ch := '1';
+    
+    SELECT ten_ch
+    INTO v_ten_ch
+    FROM cua_hang
+    WHERE ma_ch = v_ma_ch;
+    
+    INSERT INTO test(ten_ch)
+    VALUES(v_ten_ch);
+END;
+```
+
+### 3. Cấu trúc điều khiển IF - ELSE:
+```
+SET SERVEROUTPUT ON;
+DECLARE
+    v_grade VARCHAR(1);
+BEGIN
+    v_grade := 'B';
+    
+    IF v_grade = 'A' THEN
+        DBMS_OUTPUT.PUT_LINE('Excellent');
+    ELSIF v_grade = 'B' THEN
+        DBMS_OUTPUT.PUT_LINE('Very Good');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Poor');
+    END IF;
+END;
+```
+
+### 4. 
