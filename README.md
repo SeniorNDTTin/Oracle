@@ -192,4 +192,28 @@ BEGIN
 END;
 ```
 
-### 4. 
+### 4. Mệnh đề LOOP:
+```
+SET SERVEROUTPUT ON;
+DECLARE
+    i NUMBER;
+    tong NUMBER;
+BEGIN
+    tong := 0;
+
+    i := 1;
+    LOOP
+        tong := tong + i;
+        
+        EXIT WHEN i = 5;
+        i := i + 1;
+    END LOOP;
+    
+    DBMS_OUTPUT.PUT_LINE(tong);
+END;
+```
+
+### 5. Kiểu Cursor:
+```
+
+```
