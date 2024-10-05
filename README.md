@@ -215,5 +215,109 @@ END;
 
 ### 5. Kiểu Cursor:
 ```
+SET SERVEROUTPUT ON;
+DECLARE
+    CURSOR c_cua_hang(v_ma_ch VARCHAR2) IS
+        SELECT ma_ch, ten_ch
+        FROM cua_hang
+        WHERE ma_ch >= v_ma_ch;
+    
+    v_cua_hang c_cua_hang%ROWTYPE;
+BEGIN
+    OPEN c_cua_hang(3);
+    
+    LOOP
+        FETCH c_cua_hang INTO v_cua_hang;
+        EXIT WHEN c_cua_hang%NOTFOUND;
+        
+        DBMS_OUTPUT.PUT_LINE(v_cua_hang.ma_ch || ' ' || v_cua_hang.ten_ch);
+    END LOOP;
+    
+    CLOSE c_cua_hang;
+END;
+```
 
+```
+SET SERVEROUTPUT ON;
+DECLARE
+    CURSOR c_cua_hang(v_ma_ch VARCHAR2) IS
+        SELECT ma_ch, ten_ch
+        FROM cua_hang
+        WHERE ma_ch >= v_ma_ch
+        FOR UPDATE OF ten_ch;
+    
+    v_cua_hang c_cua_hang%ROWTYPE;
+BEGIN
+    OPEN c_cua_hang(3);
+    
+    LOOP
+        FETCH c_cua_hang INTO v_cua_hang;
+        EXIT WHEN c_cua_hang%NOTFOUND;
+        
+        UPDATE cua_hang SET ten_ch = 'Cua hang moi'
+        WHERE CURRENT OF c_cua_hang;
+    END LOOP;
+    
+    CLOSE c_cua_hang;
+END;
+```
+
+### 6. Thủ tục, hàm và trigger:
+Thủ tục:
+```
+CREATE PROCEDURE update_address(v_ma_ch VARCHAR2, new_dia_chi NVARCHAR2)
+IS
+BEGIN
+    UPDATE cua_hang SET dia_chi = new_dia_chi
+    WHERE ma_ch = v_ma_ch;
+    
+    COMMIT;
+END;
+
+EXECUTE update_address('3', 'Ca Mau');
+
+DROP PROCEDURE update_address;
+```
+
+Hàm:
+```
+CREATE OR REPlACE FUNCTION get_dia_chi(v_ma_ch VARCHAR2)
+    RETURN NVARCHAR2
+IS
+    v_dia_chi NVARCHAR2(30);
+BEGIN
+    SELECT dia_chi INTO v_dia_chi 
+    FROM cua_hang
+    WHERE ma_ch = v_ma_ch;
+    
+    RETURN v_dia_chi;
+END;
+
+SET SERVEROUTPUT ON;
+DECLARE
+    v_dia_chi NVARCHAR2(30);
+BEGIN
+    v_dia_chi := get_dia_chi('3');
+    
+    DBMS_OUTPUT.PUT_LINE(v_dia_chi);
+END;
+
+DROP FUNCTION get_dia_chi;
+```
+
+Triiger:
+```
+CREATE OR REPlACE TRIGGER check_luong
+    AFTER INSERT OR UPDATE OF luong ON user_test.nhan_vien
+    FOR EACH ROW
+BEGIN
+    IF (:new.luong < 0) THEN
+        RAISE_APPLICATION_ERROR(-20225, 'Luong khong nho hon 0');
+    END IF;
+END;
+
+UPDATE user_test.nhan_vien SET luong = -10
+WHERE ma_nv = '1';
+
+DROP TRIGGER check_luong;
 ```
